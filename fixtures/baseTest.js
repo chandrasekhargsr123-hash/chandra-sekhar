@@ -1,13 +1,8 @@
-const base = require('@playwright/test');
+const { test } = require('@playwright/test');
 
-exports.test = base.test.extend({
-  
-  loginPage: async ({ page }, use) => {
-    const LoginPage = require('../pages/LoginPage');
-    const loginPage = new LoginPage(page);
-    await use(loginPage);
+exports.baseTest = test.extend({
+  page: async ({ page }, use) => {
+    await page.goto('https://www.saucedemo.com/');
+    await use(page);
   }
-
 });
-
-exports.expect = base.expect;

@@ -1,26 +1,12 @@
-const { test, expect } = require('../fixtures/testBase');
-const { getData } = require('../utils/excelReader');
-const LoginPage = require('../pages/LoginPage');
+const {expect } =require('@playwright/test');
+const {baseTest} = require('../fixtures/baseTest');
+const loginData = require('../utils/testdata.json');
 
-const users = getData('LoginData');   // 👈 Excel Sheet name
+baseTest('Valid Login Test', async({page}) =>{
 
-for (const user of users) {
+  await page.fill('#user-name',loginData.username);
+  await page.fill('#password',loginData.password);
+  await page.click('#login-button');
 
-  test(`Login Test - ${user.username}`, async ({ page }) => {
-
-    const login = new LoginPage(page);
-
-    await page.goto('https://www.saucedemo.com/');
-
-    await login.login(user.username, user.password);
-
-    // valid user check (simple example)
-    if (user.username === "standard_user") {
-      await expect(page).toHaveURL(/inventory/);
-    } else {
-      await expect(page.locator('.error-message-container')).toBeVisible();
-    }
-
-  });
-
-}
+  await expect(page).toHaveURL(/inventory/);
+});
